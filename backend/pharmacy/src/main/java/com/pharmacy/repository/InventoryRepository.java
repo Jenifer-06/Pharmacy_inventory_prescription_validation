@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
-    List<Inventory> findByStockQuantityLessThanEqual(Integer reorderLevel);
+    Inventory findByMedicineId(Long medicineId);
+
+    List<Inventory> findByStockQuantityLessThanEqual(Integer stockQuantity);
 
 }
