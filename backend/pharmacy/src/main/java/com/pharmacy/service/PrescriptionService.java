@@ -44,10 +44,17 @@ public class PrescriptionService {
         }
 
         if (prescription.getQuantity() <= inventory.getStockQuantity()) {
-            prescription.setValid(true);
-        } else {
-            prescription.setValid(false);
-        }
+    prescription.setValid(true);
+
+    int remainingStock = inventory.getStockQuantity()
+            - prescription.getQuantity();
+
+    inventory.setStockQuantity(remainingStock);
+    inventoryRepository.save(inventory);
+
+} else {
+    prescription.setValid(false);
+}
 
         return prescriptionRepository.save(prescription);
     }
