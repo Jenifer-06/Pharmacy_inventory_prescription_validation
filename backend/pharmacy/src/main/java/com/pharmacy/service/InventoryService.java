@@ -4,6 +4,7 @@ import com.pharmacy.entity.Inventory;
 import com.pharmacy.repository.InventoryRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,9 +25,12 @@ public class InventoryService {
     }
 
     public Inventory updateInventory(Long id, Inventory inventory) {
-        Inventory existingInventory = inventoryRepository.findById(id).orElse(null);
+
+        Inventory existingInventory =
+                inventoryRepository.findById(id).orElse(null);
 
         if (existingInventory != null) {
+
             existingInventory.setMedicineId(inventory.getMedicineId());
             existingInventory.setStockQuantity(inventory.getStockQuantity());
             existingInventory.setReorderLevel(inventory.getReorderLevel());
@@ -42,6 +46,19 @@ public class InventoryService {
     }
 
     public List<Inventory> getLowStockInventory() {
-        return inventoryRepository.findByStockQuantityLessThanEqual(15);
+
+        List<Inventory> allInventory = inventoryRepository.findAll();
+        List<Inventory> lowStockInventory = new ArrayList<>();
+
+        for (Inventory inventory : allInventory) {
+
+            if (inventory.getStockQuantity()
+                    <= inventory.getReorderLevel()) {
+
+                lowStockInventory.add(inventory);
+            }
+        }
+
+        return lowStockInventory;
     }
 }

@@ -4,6 +4,7 @@ import com.pharmacy.entity.Medicine;
 import com.pharmacy.repository.MedicineRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -23,14 +24,32 @@ public class MedicineService {
         return medicineRepository.findAll();
     }
 
+    public List<Medicine> searchMedicines(String name) {
+        return medicineRepository.findByMedicineNameContainingIgnoreCase(name);
+    }
+
+    public List<Medicine> getMedicinesByCategory(String category) {
+    return medicineRepository.findByCategoryIgnoreCase(category);
+}
+
+    public List<Medicine> getExpiredMedicines() {
+
+        String today = LocalDate.now().toString();
+
+        return medicineRepository.findByExpiryDateBefore(today);
+    }
+
     public Medicine getMedicineById(Long id) {
         return medicineRepository.findById(id).orElse(null);
     }
 
     public Medicine updateMedicine(Long id, Medicine medicine) {
-        Medicine existingMedicine = medicineRepository.findById(id).orElse(null);
+
+        Medicine existingMedicine =
+                medicineRepository.findById(id).orElse(null);
 
         if (existingMedicine != null) {
+
             existingMedicine.setBatchNumber(medicine.getBatchNumber());
             existingMedicine.setCategory(medicine.getCategory());
             existingMedicine.setExpiryDate(medicine.getExpiryDate());
@@ -48,5 +67,4 @@ public class MedicineService {
     public void deleteMedicine(Long id) {
         medicineRepository.deleteById(id);
     }
-
 }

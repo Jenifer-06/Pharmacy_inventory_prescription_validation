@@ -10,5 +10,4 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     Inventory findByMedicineId(Long medicineId);
 
     List<Inventory> findByStockQuantityLessThanEqual(Integer stockQuantity);
-
 }
